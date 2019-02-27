@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        html,body{
+            background-color:aqua;
+        }
+        canvas {
+            background-color:whitesmoke;
+            position: absolute;
+            top:0;left:0;right:0;bottom:0;
+            margin:auto;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600px" height="600px"></canvas>
+
+<script>
+   window.onload = function () {
+
+
+       var canvas = document.querySelector('canvas');
+       if (canvas) {
+           var ctx = canvas.getContext('2d');
+           clock();
+           setInterval(function () {
+               ctx.clearRect(0,0,600,600)
+               //前回　描いたやつ削除するために　
+               //canvasの削除は　一番上で　bgcと同じものを加えて
+               clock();
+           }, 1000);
+
+           function clock() {
+               //カウンターで　Date毎回必ず更新
+               var date = new Date();
+               var s = date.getSeconds();
+               var m = date.getMinutes()+s/60;
+               var h = date.getHours()+m/60;
+               ctx.save();
+               ctx.translate(300, 300);
+               ctx.lineCap = 'round';
+               ctx.strokeStyle = 'black';
+               ctx.lineWidth = 12;
+
+               //外側
+               ctx.save();
+               ctx.lineWidth = 25;
+               ctx.strokeStyle = '#325FA2';
+               ctx.beginPath();
+               ctx.arc(0, 0, 280, 0, 2 * Math.PI);
+               ctx.stroke();
+               ctx.restore();
+
+               //時針 刻度
+               ctx.save();
+               ctx.beginPath();
+               for (var i = 0; i < 12; i++) {
+                   ctx.rotate(30 * Math.PI / 180);
+                   ctx.moveTo(0, 237);
+                   ctx.lineTo(0, 197);
+               }
+               ctx.stroke();
+               ctx.restore();
+
+               //分針 刻度
+               ctx.save();
+               ctx.lineWidth = 6;
+               ctx.beginPath();
+               for (var i = 0; i < 60; i++) {
+                   ctx.rotate(6 * Math.PI / 180);
+                   if ((i + 1) % 5 != 0) {
+                       ctx.moveTo(0, 237);
+                       ctx.lineTo(0, 217);
+                   }
+               }
+               ctx.stroke();
+               ctx.restore();
+
+               //時針
+               ctx.save();
+               ctx.lineWidth = 20;
+               ctx.beginPath();
+               ctx.rotate((h * 30 - 90) * Math.PI / 180)
+               ctx.moveTo(-40, 0);
+               ctx.lineTo(100, 0);
+               ctx.stroke();
+               ctx.restore();
+
+               //分針
+               ctx.save();
+               ctx.lineWidth = 10;
+               ctx.beginPath();
+               ctx.rotate((m * 6 - 90) * Math.PI / 180)
+               ctx.moveTo(-40, 0);
+               ctx.lineTo(190, 0);
+               ctx.stroke();
+               ctx.restore();
+
+               //秒針
+               ctx.save();
+               ctx.strokeStyle = '#D40000';
+               ctx.lineWidth = 6;
+               ctx.beginPath();
+               ctx.rotate((s * 6 - 90) * Math.PI / 180)
+               ctx.rotate((6 - 90) * Math.PI / 180)
+               ctx.moveTo(-60, 0);
+               ctx.lineTo(180, 0);
+
+               ctx.stroke();
+               ctx.save();
+               ctx.beginPath();
+               ctx.arc(195, 0, 15, 0, 2 * Math.PI);
+               ctx.stroke();
+               ctx.restore();
+               ctx.restore();
+
+               //中心
+               ctx.save();
+               ctx.fillStyle = '#D40000';
+               ctx.beginPath();
+               ctx.arc(0, 0, 20, 0, 2 * Math.PI);
+               ctx.fill();
+               ctx.restore();
+
+
+               ctx.restore();
+
+
+           }
+
+       }
+   }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>exp</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        html,body{
+            height:100%;
+            background-color:aquamarine;
+
+        }
+        canvas{
+            background-color:white;
+            position:absolute;
+            left:0;top:0;bottom:0;right:0;
+            margin:auto;
+        }
+    </style>
+</head>
+<body>
+<canvas width="1300px" height="700px"></canvas>
+<script>
+//需要的関数
+function getColor(imgData,x,y){
+    var color = [];
+    color[0]=imgData.data[(y*imgData.width+x)*4+0];
+    color[1]=imgData.data[(y*imgData.width+x)*4+1];
+    color[2]=imgData.data[(y*imgData.width+x)*4+2];
+    color[3]=imgData.data[(y*imgData.width+x)*4+3];
+
+    return color;
+}
+function setPx(imgData,x,y,color) {
+    imgData.data[(y*imgData.width+x)*4] = color[0];
+    imgData.data[(y*imgData.width+x)*4+1] = color[1];
+    imgData.data[(y*imgData.width+x)*4+2] = color[2];
+    imgData.data[(y*imgData.width+x)*4+3] = color[3];
+
+}
+//
+    var canvas = document.querySelector('canvas');
+    if(canvas.getContext){
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
+
+        img.src = "../img/queen.png";
+        img.onload = function () {
+            ctx.drawImage(img,0,0,682,600);
+            var old = ctx.getImageData(0,0,682,600);
+
+            var neww = ctx.createImageData(682,600);
+            var size =10;
+            for(var i=0;i<682/size;i++){
+                for(var j=0;j<600/size;j++){
+                var x,y;
+                x = Math.floor(Math.random()*size);
+                y = Math.floor(Math.random()*size);
+                var random_c = getColor(old ,x+i*size,y+j*size);
+
+                   for(var a=0;a<size;a++){
+                       for(var b=0;b<size;b++){
+                           setPx(neww,a+i*size,b+j*size,random_c)
+                       }
+                   }
+                }
+            }
+            ctx.putImageData(neww,618,0);
+        //     ctx.putImageData(neww,0,0);
+
+        }
+    }
+</script>
+</body>
+</html>
